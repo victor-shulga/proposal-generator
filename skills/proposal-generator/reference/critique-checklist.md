@@ -37,5 +37,5 @@ price → commoditised. Name this first.
 
 ## Output of the critique
 1. The quote-vs-proposal verdict. 2. Prioritised gap list. 3. What to keep. 4. The ICP /
-work-type axis revealed by the examples (e.g. Karno's were: detailed-design modelling /
-point-cloud existing-conditions / Stage-5 coordination — the 3-block swap dimension). Then build.
+work-type axis revealed by the examples (e.g. for a BIM/MEP contractor: detailed-design
+modelling / point-cloud existing-conditions / coordination — the 3-block swap dimension). Then build.

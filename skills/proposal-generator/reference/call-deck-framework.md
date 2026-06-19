@@ -36,7 +36,7 @@ How we work → Relevant cases → (Next step / close).
 
 5. **Solution — how you deliver** (slides 4-10 in the source). 
    *Principle: if you present only scope, you lose the deal. Show HOW you deliver.* 
-   Use the client's signature method (e.g. Karno's 8-step Buildable BIM Framework). Detail, not
+   Use the client's own signature method (e.g. their N-step delivery framework). Detail, not
    just a scope list.
 
 6. **Pricing — 2-3 options** (slides 11-14). 

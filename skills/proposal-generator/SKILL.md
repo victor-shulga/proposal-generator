@@ -6,8 +6,7 @@ description: >
   presents it on a call: a scroll-snap slide deck following Viktor Shulga's high-ticket
   proposal framework). Variant B = SEND PROPOSAL (a self-contained document that sells
   without a human). Optionally first CRITIQUES the client's existing quotes/proposals
-  (quote-vs-proposal reframe). Reusable across ALL B2B Global clients — first reference
-  build was Karno Energy. Trigger when Viktor says: "зроби пропоузал для [client]",
+  (quote-vs-proposal reframe). Reusable across ALL B2B Global clients. Trigger when Viktor says: "зроби пропоузал для [client]",
   "proposal for [client]", "пропоузал-генератор", "два варіанти пропоузала (дзвінок / надсилання)",
   "просмаж пропоузали / quotes", "build a proposal", or pastes a client's existing quotes
   and asks to turn them into proposals. NOT for the design system itself (that is the
@@ -17,9 +16,9 @@ description: >
 # Proposal Generator
 
 Turns a client's brand into two proposals that do two different jobs, split by **how the
-proposal reaches the buyer**. Reusable for every B2B Global client. Gold-standard reference
-build: **Karno Energy** — `~/Desktop/B2B Global/karno-proposals/` and live at
-https://karno-proposals.netlify.app (call-deck.html + send-proposal.html + index.html).
+proposal reaches the buyer**. Reusable for every B2B Global client. A gold-standard reference
+build (call-deck.html + send-proposal.html + index.html) lives in the local B2B Global
+workspace under `<client>-proposals/`.
 
 ## The two variants (never a send×ICP matrix)
 
