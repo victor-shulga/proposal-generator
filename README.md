@@ -37,6 +37,21 @@ The skill confirms inputs (brand, existing quotes, which variants), optionally c
 current quotes, builds A + B on the client's brand, previews, and deploys to
 `https://<client>-proposals.netlify.app`.
 
+## Requirements & integrations
+
+Runs inside **Claude Code**. To set it up, connect:
+
+| Integration | Used for | Required? | Auth / setup |
+|---|---|---|---|
+| A client **design system** or brand tokens | The proposals are built on the client's exact colours/fonts (ideally from [design-system-generator](https://github.com/victor-shulga/design-system-generator)) | **Required input** | Point the skill at the client's `*-design-system/index.html`, or its live URL |
+| `WebFetch` + Bash (`curl`, `grep`) | Grounding client copy/proof; extracting brand tokens if no design system exists yet | **Built in** — no setup | — |
+| **Netlify** (CLI via `npx netlify-cli`) | Deploying both proposals to a live URL | **Required** for the deploy step. Without it you still get the local HTML files. | `npx netlify-cli login` or `NETLIFY_AUTH_TOKEN` |
+| **Apify** (MCP server) | Fallback scraper for JS-heavy / curl-blocked client sites when extracting brand directly | Optional | Connect the Apify MCP server / set `APIFY_TOKEN` |
+| Claude Preview (local server) | Previewing the deck/document before deploy | Optional | Built into Claude Code |
+
+No LLM API key is needed beyond Claude Code itself. A traffic/SEO source (SimilarWeb / Ahrefs)
+is *not* used by this plugin — proof comes from the client's own case studies, not web analytics.
+
 ## Install
 ```bash
 cp -R skills/proposal-generator ~/.claude/skills/          # or:
