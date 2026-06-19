@@ -5,8 +5,6 @@ to Netlify. Reusable across every B2B Global client. Sibling of
 [design-system-generator](https://github.com/victor-shulga/design-system-generator) — the
 design system feeds the brand, this builds the proposals on top of it.
 
-First reference build: **Karno Energy** — https://karno-proposals.netlify.app
-
 ---
 
 ## Two variants, split by how the proposal reaches the buyer
