@@ -1,0 +1,12 @@
+{
+  "name": "proposal-generator",
+  "version": "0.1.0",
+  "description": "Generates two client-ready sales proposals as single-file HTML, built on the client's own brand/design system, and deploys to Netlify. Variant A = CALL DECK (presenter slide deck following Viktor Shulga's high-ticket proposal framework: why-us-for-them, challenge + buyer quote, alternatives not ROI, solution, 2-3 pricing tiers, expected-results timeline, how-we-work, relevant cases). Variant B = SEND PROPOSAL (self-contained document that sells without a human: summary, situation, approach, scope, proof, why-us, pricing table, FAQ/objections, CTA). Optionally critiques the client's existing quotes first (quote-vs-proposal reframe). Reusable across all B2B Global clients; first reference build was Karno Energy.",
+  "author": {
+    "name": "Victor Shulga / B2B Global",
+    "url": "https://github.com/victor-shulga"
+  },
+  "keywords": ["proposal", "sales", "pitch-deck", "quote", "agency", "b2b", "netlify", "high-ticket"],
+  "license": "MIT",
+  "skills": "./skills/"
+}

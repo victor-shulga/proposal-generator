@@ -1,0 +1,12 @@
+# OS
+.DS_Store
+Thumbs.db
+# Editor / env
+.vscode/
+.idea/
+*.log
+.env
+# Netlify deploy state (per-machine)
+.netlify/
+# Generated client proposals live in the B2B Global workspace, not this repo
+*-proposals/

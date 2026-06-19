@@ -1,0 +1,22 @@
+{
+  "name": "proposal-generator",
+  "metadata": {
+    "description": "Generate two client-ready sales proposals (call deck + send document) on the client's own brand, deploy to Netlify."
+  },
+  "owner": {
+    "name": "Victor Shulga",
+    "url": "https://github.com/victor-shulga"
+  },
+  "plugins": [
+    {
+      "name": "proposal-generator",
+      "source": "./",
+      "description": "Client brand + existing quotes -> two HTML proposals (A call deck on Viktor's high-ticket framework, B self-contained send document) -> Netlify. Quote-vs-proposal critique built in.",
+      "version": "0.1.0",
+      "keywords": ["proposal", "sales", "pitch-deck", "agency", "b2b", "netlify"],
+      "author": {
+        "name": "Victor Shulga / B2B Global"
+      }
+    }
+  ]
+}
