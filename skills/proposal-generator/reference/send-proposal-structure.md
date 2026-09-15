@@ -2,8 +2,11 @@
 
 The send proposal travels alone (email / follow-up / forwarded internally). It must sell
 WITHOUT a human in the room — so it carries the "why" in writing that the call-deck would
-carry by voice. Render as a scrolling single-page document on the client's brand, with a
-sticky top bar (wordmark + CTA) and a scroll progress bar. ~A4-width column (~820px).
+carry by voice. Render it as a stack of 1600×900 `<section class="slide">` slides on the client's brand:
+the same canvas and print block as the call deck (see `deck-engine.md`), never an A4 page.
+On screen add a sticky top bar (wordmark + CTA) and a scroll progress bar. One anatomy
+section is one slide; when a section overflows, split it into two slides instead of
+shrinking body type below ~17px.
 
 ## Anatomy
 1. **Cover** — dark brand panel: "Proposal · prepared for [Contact], [Company]", a headline
@@ -23,9 +26,11 @@ sticky top bar (wordmark + CTA) and a scroll progress bar. ~A4-width column (~82
    invisible, quality/liability, speed, scope-change). This is the send-doc's version of the
    call-deck's "Alternatives" + live Q&A.
 10. **How we start** — 3 numbered steps + primary CTA + a signature block (name, title, contact).
-Footer: "valid 30 days from [date]". Add `@media print` so it exports cleanly to PDF.
+Footer: "valid 30 days from [date]". The `@media print` block with `@page { size: 1600px 900px }` is mandatory: this is the
+file that becomes the emailed PDF, one page per slide.
 
 ## Differences vs the call-deck
+- Same 1600×900 canvas and print block. The difference is density, not page format.
 - Pricing is a **table** (reads alone), not visual tier-cards.
 - Has a **FAQ/objections** section + a fuller **Scope** list (the rep isn't there to answer).
 - Copy is heavier and complete; the deck's copy is deliberately sparse.
