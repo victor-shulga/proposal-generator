@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Трекер пропоузалів</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canvas:#FFFFFF; --card:#F7F5F1; --soft:#FAFAF8; --line:#E8E6E1; --line-soft:#F1EFEB;
+  --ink:#141413; --body:#3D3D3A; --muted:#6C6A64; --faint:#9A9892;
+  --coral:#E85A4F; --coral-deep:#C24235; --coral-soft:#FBEAE8;
+  --forest:#2D5A4A; --forest-soft:#E8F0EC; --dark:#161513;
+  --bar:#D9D6CF;
+  --display:'Inter Tight',Inter,system-ui,sans-serif; --text:Inter,system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  --r-sm:6px; --r-md:10px; --r-lg:16px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--canvas)}
+body{font-family:var(--text);color:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased;font-size:15px}
+h1,h2,h3{font-family:var(--display);font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1.05;margin:0}
+a{color:var(--ink)}
+button{font:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.dot{color:var(--coral)}
+
+/* logo: stacked wordmark + bowtie mark, never one line */
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.btmark{width:38px;height:38px;border-radius:10px;background:var(--coral);display:inline-flex;align-items:center;justify-content:center;flex:none}
+.stacked{font-family:var(--display);font-weight:800;font-size:19px;line-height:.92;letter-spacing:-.03em;color:var(--ink)}
+
+.top{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:20}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:68px}
+.top .actions{display:flex;gap:10px;align-items:center}
+
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:700;font-size:14px;padding:10px 18px;border-radius:var(--r-md);border:1.5px solid transparent;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn-primary{background:var(--coral);color:#fff}
+.btn-primary:hover{background:var(--coral-deep)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--ink)}
+.btn-sm{font-size:12px;padding:6px 11px;border-radius:var(--r-sm)}
+
+.head{padding:34px 0 8px;text-align:center}
+.head h1{font-size:40px}
+.head .sub{color:var(--muted);margin-top:8px;font-size:15px}
+
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin:26px 0}
+.kpi{border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 20px;background:#fff}
+.kpi .n{font-family:var(--display);font-weight:800;font-size:34px;color:var(--ink);letter-spacing:-.03em;line-height:1}
+.kpi .n small{font-size:18px;color:var(--faint);font-weight:700}
+.kpi .c{font-size:13px;color:var(--muted);margin-top:8px}
+
+.split{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:18px;align-items:start}
+.panel{border:1px solid var(--line);border-radius:var(--r-lg);background:#fff;padding:20px 22px;margin-bottom:18px}
+.panel h2{font-size:19px;display:flex;align-items:center;gap:4px}
+.p-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+
+.plist{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.pitem{border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;cursor:pointer;background:#fff;text-align:left;width:100%}
+.pitem:hover{border-color:var(--faint)}
+.pitem.active{border-color:var(--ink);box-shadow:inset 3px 0 0 var(--coral)}
+.pitem .t{font-family:var(--display);font-weight:700;color:var(--ink);font-size:15px;line-height:1.25}
+.pitem .m{font-size:12.5px;color:var(--muted);margin-top:4px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--body);background:#fff}
+.tag.hot{background:var(--coral-soft);color:var(--coral-deep);border-color:transparent}
+.tag.win{background:var(--forest-soft);color:var(--forest);border-color:transparent}
+.tag.cold{color:var(--faint)}
+
+.det-title{font-size:26px}
+.det-meta{font-size:13px;color:var(--muted);margin-top:6px;word-break:break-all}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+td .who{font-weight:600;color:var(--ink)}
+td .sm{font-size:12px;color:var(--muted)}
+.yes{color:var(--forest);font-weight:600}
+.strong{color:var(--ink);font-weight:600}
+.no{color:var(--faint)}
+
+.bars{display:flex;flex-direction:column;gap:7px;margin-top:6px}
+.bar{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) 84px;gap:10px;align-items:center;font-size:13px}
+.bar .l{color:var(--body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .track{display:block;height:18px;background:var(--soft);border-radius:4px;overflow:hidden}
+.bar .fill{display:block;height:100%;background:var(--bar);border-radius:4px}
+.bar.main .fill{background:var(--coral)}
+.bar.main .l{color:var(--ink);font-weight:600}
+.bar .v{font-family:var(--mono);font-size:12px;color:var(--ink);text-align:right;white-space:nowrap}
+
+.feed{list-style:none;margin:12px 0 0;padding:0}
+.feed li{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;padding:10px 0;border-bottom:1px solid var(--line-soft);font-size:13.5px;align-items:start}
+.feed .ic{font-size:16px;line-height:1.3}
+.feed .when{font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
+.feed b{color:var(--ink);font-weight:600}
+
+.empty{color:var(--muted);font-size:14px;padding:18px 0}
+select,input,textarea{font:inherit;font-size:14px;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-md);padding:10px 12px;background:#fff;width:100%}
+select{width:auto}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--ink)}
+label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin:14px 0 6px}
+label small{font-weight:400;color:var(--muted)}
+
+/* login */
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-box{width:min(420px,100%);border:1px solid var(--line);border-radius:var(--r-lg);padding:32px}
+.login-box h1{font-size:28px;margin:26px 0 8px}
+.login-box p{color:var(--muted);font-size:14px;margin:0 0 18px}
+.err{color:var(--coral-deep);font-size:13px;margin-top:10px;min-height:18px}
+
+dialog{border:none;border-radius:var(--r-lg);padding:0;width:min(560px,94vw);box-shadow:0 24px 60px rgba(0,0,0,.18)}
+dialog::backdrop{background:rgba(22,21,19,.45)}
+.dlg{padding:26px 28px}
+.dlg h2{font-size:22px}
+.dlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.links{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.link-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:var(--r-md);padding:8px 10px}
+.link-row .n{font-weight:600;color:var(--ink);font-size:13px}
+.link-row .u{font-family:var(--mono);font-size:11px;color:var(--muted);word-break:break-all}
+.hidden{display:none!important}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 16px;border-radius:var(--r-md);font-size:13px;z-index:100;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+.foot-line{color:var(--faint);font-size:12px;text-align:center;padding:26px 0 40px}
+
+@media (max-width:1024px){.split{grid-template-columns:minmax(0,1fr)}.kpi{padding:16px}.kpi .n{font-size:28px}}
+@media (max-width:760px){.head h1{font-size:30px}.top .btn-ghost{display:none}.bar{grid-template-columns:minmax(0,110px) minmax(0,1fr) 72px}}
+</style>
+<!-- info-tips: _shared/info-tips.html -->
+<style id="info-tips-css">
+  .info-btn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;
+    border:1.5px solid currentColor;color:#9AA3AF;background:none;padding:0;margin-left:8px;cursor:pointer;
+    font:italic 700 11px/1 Georgia,'Times New Roman',serif;vertical-align:middle;position:relative;letter-spacing:0;text-transform:none}
+  .info-btn:hover,.info-btn:focus-visible,.info-btn.open{color:#1F2328;outline:none}
+  .info-pop{display:none;position:absolute;z-index:60;top:26px;left:0;width:min(440px,86vw);background:#1B1B1B;color:#E9E9E9;
+    font:400 13px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;font-style:normal;text-align:left;
+    padding:14px 16px;border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.22);white-space:normal;text-transform:none;letter-spacing:0}
+  .info-pop b,.info-pop strong{color:#FFFFFF}
+  .info-pop::before{content:"";position:absolute;top:-6px;left:var(--arrow,6px);border:6px solid transparent;border-top:0;border-bottom-color:#1B1B1B}
+  .info-btn:hover .info-pop,.info-btn:focus-visible .info-pop,.info-btn.open .info-pop{display:block}
+</style>
+<!-- mobile-guard: _shared/mobile-guard.html (last <style>) -->
+<style id="mobile-guard">
+  .kpis>*,.grid2>*,.grid3>*,.split>*,.panel,.kpi,.card{min-width:0}
+  .panel svg,.panel canvas,.panel img,.card svg,.card canvas,.card img{max-width:100%}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+  @media (max-width:1024px){
+    .panel table,.card table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+  }
+  @media (max-width:760px){
+    .grid2,.grid3,.split{grid-template-columns:minmax(0,1fr)!important}
+    .kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+    .filters{flex-wrap:wrap}
+    .filters select,.filt select{min-width:0;max-width:100%}
+  }
+  @media (max-width:480px){
+    .kpis{grid-template-columns:minmax(0,1fr)!important}
+    .kpis>*{grid-column:auto!important}
+  }
+</style>
+</head>
+<body>
+
+<template id="logo-tpl">
+  <span class="logo">
+    <span class="btmark"><svg width="22" height="22" viewBox="0 0 100 100" aria-hidden="true"><path d="M14 24 L46 50 L14 76 Z" fill="#fff" stroke="#fff" stroke-width="11" stroke-linejoin="round"/><path d="M86 24 L54 50 L86 76 Z" fill="#fff" stroke="#fff" stroke-width="11" stroke-linejoin="round"/><circle cx="50" cy="50" r="7.5" fill="#161513"/></svg></span>
+    <span class="stacked">Victor<br>Shulga<span class="dot">.</span></span>
+  </span>
+</template>
+
+<!-- LOGIN -->
+<div id="login" class="login hidden">
+  <form class="login-box" id="login-form">
+    <div data-logo></div>
+    <h1>Трекер пропоузалів</h1>
+    <p>Введіть адмін-токен. Він зберігається лише в цьому браузері.</p>
+    <input id="token" type="password" autocomplete="off" placeholder="Адмін-токен" required>
+    <div class="err" id="login-err"></div>
+    <button class="btn btn-primary" type="submit" style="width:100%;justify-content:center;margin-top:6px">Увійти</button>
+  </form>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <header class="top"><div class="wrap">
+    <div data-logo></div>
+    <div class="actions">
+      <button class="btn btn-ghost btn-sm" id="refresh" type="button">Оновити</button>
+      <button class="btn btn-ghost btn-sm" id="logout" type="button">Вийти</button>
+      <button class="btn btn-primary" id="new-btn" type="button">+ Новий пропоузал</button>
+    </div>
+  </div></header>
+
+  <main class="wrap">
+    <div class="head">
+      <h1>Хто читає пропоузали</h1>
+      <p class="howto"><b>Як читати.</b> Кожна людина отримує свій лінк, тому видно, хто саме відкрив, скільки читав і що перечитував.
+        «Повернувся» = новий візит після 6+ годин тиші. «Новий пристрій» = той самий лінк на іншому пристрої, найчастіше пересилання колезі.
+        «Ціни» = слайд цін на екрані 10+ секунд. Час рахується лише коли слайд видно і вкладка активна.</p>
+      <div class="sub" id="updated"></div>
+    </div>
+
+    <section class="kpis" id="kpis"></section>
+
+    <div class="split">
+      <div>
+        <div class="panel">
+          <div class="p-head">
+            <h2>Пропоузали</h2>
+            <label style="margin:0;font-weight:500;font-size:12.5px;color:var(--muted);display:flex;gap:6px;align-items:center">
+              <input type="checkbox" id="show-arch" style="width:auto"> архів
+            </label>
+          </div>
+          <p class="note">Зверху ті, де щось відбувалось останнім. <b>Гаряче</b> = повернулись, переслали, читали ціни або натиснули кнопку за останні 48 годин.</p>
+          <div class="plist" id="plist"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel" id="detail"><div class="empty">Оберіть пропоузал зліва.</div></div>
+
+        <div class="panel">
+          <h2>Стрічка подій</h2>
+          <p class="note">Ті самі події, що приходять у Telegram, по всіх активних пропоузалах. Одна подія одного виду на людину раз на 6 годин.</p>
+          <ul class="feed" id="feed"></ul>
+        </div>
+      </div>
+    </div>
+    <div class="foot-line">victorshulga.com · трекер пропоузалів</div>
+  </main>
+</div>
+
+<!-- NEW PROPOSAL -->
+<dialog id="dlg">
+  <form class="dlg" id="new-form" method="dialog">
+    <h2>Новий пропоузал</h2>
+    <label>Назва <small>як бачитимете в списку</small></label>
+    <input name="label" placeholder="Клієнт · угода" required>
+    <label>Лінк на пропоузал</label>
+    <input name="url" type="url" placeholder="https://client-proposals.netlify.app/send-proposal.html" required>
+    <label>ID <small>латиниця, цифри, дефіс; лишається в коді сторінки</small></label>
+    <input name="id" pattern="[a-z0-9][a-z0-9\-]*" placeholder="client-deal" required>
+    <label>Кому <small>одна людина на рядок, напр. «Jane Doe (CEO)»</small></label>
+    <textarea name="recipients" rows="3" placeholder="Jane Doe (CEO)&#10;John Roe (CFO)"></textarea>
+    <label>ID компанії в Twenty <small>необов'язково; тоді з'явиться сигнал F12</small></label>
+    <input name="crm" placeholder="uuid компанії">
+    <div class="err" id="new-err"></div>
+    <div class="row">
+      <button class="btn btn-ghost" type="button" id="dlg-cancel">Скасувати</button>
+      <button class="btn btn-primary" type="submit">Створити й дати лінки</button>
+    </div>
+  </form>
+  <div class="dlg hidden" id="new-done">
+    <h2>Готово: лінки для кожного</h2>
+    <p style="color:var(--muted);font-size:14px;margin:8px 0 0">Крок 1. Вставте код у сторінку (meta-теги в &lt;head&gt;, скрипт перед &lt;/body&gt;) і передеплойте.<br>
+      Крок 2. Відкрийте сторінку один раз зі своїм лінком <code>?pt=off</code>, щоб не рахувати себе.<br>
+      Крок 3. Кожній людині свій лінк.</p>
+    <div class="row" style="justify-content:flex-start"><button class="btn btn-ghost btn-sm" type="button" id="copy-snippet">Скопіювати код для сторінки</button></div>
+    <div class="links" id="new-links"></div>
+    <div class="row"><button class="btn btn-primary" type="button" id="dlg-close">Закрити</button></div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var API = location.origin;
+  var $ = function(s, r){ return (r || document).querySelector(s); };
+  var state = { proposals: [], alerts: [], current: null, report: null, person: '' };
+  var tok = function(){ try { return localStorage.getItem('pt_admin') || ''; } catch(e){ return ''; } };
+
+  document.querySelectorAll('[data-logo]').forEach(function(el){ el.appendChild($('#logo-tpl').content.cloneNode(true)); });
+
+  function api(path, opts){
+    opts = opts || {};
+    opts.headers = Object.assign({ 'Authorization': 'Bearer ' + tok(), 'Content-Type': 'application/json' }, opts.headers || {});
+    return fetch(API + path, opts).then(function(r){
+      if (r.status === 401) { showLogin('Токен не підійшов.'); throw new Error('401'); }
+      return r.json();
+    });
+  }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function ago(ts){
+    if (!ts) return '—';
+    var m = Math.round((Date.now() - ts) / 60000);
+    if (m < 1) return 'щойно'; if (m < 60) return m + ' хв тому';
+    var h = Math.round(m / 60); if (h < 48) return h + ' год тому';
+    return Math.round(h / 24) + ' дн тому';
+  }
+  function when(ts){ if (!ts) return '—'; var d = new Date(ts); return d.toLocaleDateString('uk-UA',{day:'2-digit',month:'2-digit'}) + ' ' + d.toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'}); }
+  function secs(ms){ var s = Math.round((ms || 0) / 1000); return s >= 60 ? Math.floor(s/60) + ' хв ' + (s%60) + ' с' : s + ' с'; }
+  function toast(t){ var el = $('#toast'); el.textContent = t; el.classList.add('on'); setTimeout(function(){ el.classList.remove('on'); }, 1800); }
+  function copy(text, msg){ navigator.clipboard.writeText(text).then(function(){ toast(msg || 'Скопійовано'); }); }
+  function linkFor(p, token){ if (!p.url) return '?r=' + token; return p.url + (p.url.indexOf('?') < 0 ? '?' : '&') + 'r=' + token; }
+
+  function showLogin(msg){ $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); $('#login-err').textContent = msg || ''; }
+  function showApp(){ $('#login').classList.add('hidden'); $('#app').classList.remove('hidden'); }
+
+  $('#login-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    try { localStorage.setItem('pt_admin', $('#token').value.trim()); } catch(_){}
+    load();
+  });
+  $('#logout').addEventListener('click', function(){ try { localStorage.removeItem('pt_admin'); } catch(_){} showLogin(''); });
+  $('#refresh').addEventListener('click', function(){ load(); });
+  $('#show-arch').addEventListener('change', renderList);
+
+  function load(){
+    if (!tok()) return showLogin('');
+    Promise.all([api('/admin/proposals'), api('/admin/alerts')]).then(function(res){
+      state.proposals = res[0].proposals || [];
+      state.alerts = res[1].alerts || [];
+      showApp();
+      $('#updated').textContent = 'Оновлено ' + new Date().toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'});
+      renderKpis(); renderList(); renderFeed();
+      var pick = state.current && state.proposals.some(function(p){ return p.id === state.current; }) ? state.current
+        : (state.proposals.find(function(p){ return !p.archived; }) || {}).id;
+      if (pick) openProposal(pick); else $('#detail').innerHTML = '<div class="empty">Ще немає жодного пропоузала. Натисніть «+ Новий пропоузал».</div>';
+    }).catch(function(e){ if (e.message !== '401') showLogin('Сервер не відповів: ' + e.message); });
+  }
+
+  function active(){ return state.proposals.filter(function(p){ return !p.archived; }); }
+  function sum(k){ return active().reduce(function(a, p){ return a + (p[k] || 0); }, 0); }
+
+  function renderKpis(){
+    var a = active();
+    var cards = [
+      [a.length, '', 'активних пропоузалів'],
+      [sum('opened'), ' / ' + sum('recipients'), 'людей відкрили зі своїх лінків'],
+      [sum('returned'), '', 'повернулись після паузи'],
+      [sum('pricing'), '', 'читали ціни 10+ с'],
+      [sum('forwarded'), '', 'схоже, переслали колезі'],
+    ];
+    $('#kpis').innerHTML = cards.map(function(c){
+      return '<div class="kpi"><div class="n">' + c[0] + (c[1] ? '<small>' + c[1] + '</small>' : '') + '</div><div class="c">' + c[2] + '</div></div>';
+    }).join('');
+  }
+
+  function tagsFor(p){
+    var t = [];
+    var hot = p.last_intent && Date.now() - p.last_intent < 48 * 3600e3;
+    if (hot) t.push('<span class="tag hot">● гаряче</span>');
+    if (p.clicks) t.push('<span class="tag win">кнопка ×' + p.clicks + '</span>');
+    if (p.pricing) t.push('<span class="tag">ціни: ' + p.pricing + '</span>');
+    if (p.returned) t.push('<span class="tag">повернулись: ' + p.returned + '</span>');
+    if (p.forwarded) t.push('<span class="tag">переслали: ' + p.forwarded + '</span>');
+    if (!p.sessions) t.push('<span class="tag cold">ще не відкривали</span>');
+    return t.join('');
+  }
+
+  function renderList(){
+    var showArch = $('#show-arch').checked;
+    var list = state.proposals.filter(function(p){ return showArch ? p.archived : !p.archived; });
+    $('#plist').innerHTML = list.length ? list.map(function(p){
+      return '<button type="button" class="pitem' + (p.id === state.current ? ' active' : '') + '" data-id="' + esc(p.id) + '">' +
+        '<div class="t">' + esc(p.label || p.id) + '</div>' +
+        '<div class="m">Відкрили ' + (p.opened || 0) + ' з ' + (p.recipients || 0) + ' · останній візит ' + ago(p.last_seen) + '</div>' +
+        '<div class="tags">' + tagsFor(p) + '</div></button>';
+    }).join('') : '<div class="empty">' + (showArch ? 'Архів порожній.' : 'Немає активних пропоузалів.') + '</div>';
+    $('#plist').querySelectorAll('.pitem').forEach(function(b){ b.addEventListener('click', function(){ openProposal(b.dataset.id); }); });
+  }
+
+  var ICON = { first_open:'👀', reopen:'🔁', new_device:'📨', pricing:'💰' };
+  function alertText(a){
+    var who = '<b>' + esc(a.name || (a.recipient ? 'невідомий лінк' : 'без персонального лінка')) + '</b>';
+    var what = esc(a.label || a.proposal_id);
+    if (a.kind === 'first_open') return who + ' вперше відкрив «' + what + '»';
+    if (a.kind === 'reopen') return who + ' повернувся до «' + what + '»';
+    if (a.kind === 'new_device') return '«' + what + '» відкрили на новому пристрої з лінка ' + who + '. Схоже, переслали';
+    if (a.kind === 'pricing') return who + ' читав ціни в «' + what + '»';
+    if (a.kind.indexOf('cta:') === 0) return who + ' натиснув «' + esc(a.kind.slice(4)) + '» у «' + what + '»';
+    return who + ': ' + esc(a.kind);
+  }
+  function renderFeed(){
+    $('#feed').innerHTML = state.alerts.length ? state.alerts.map(function(a){
+      var ic = ICON[a.kind] || (a.kind.indexOf('cta:') === 0 ? '✅' : '•');
+      return '<li><span class="ic">' + ic + '</span><span>' + alertText(a) + '</span><span class="when">' + ago(a.ts) + '</span></li>';
+    }).join('') : '<li class="empty" style="display:block">Подій ще не було.</li>';
+  }
+
+  function openProposal(id){
+    state.current = id; state.person = '';
+    renderList();
+    $('#detail').innerHTML = '<div class="empty">Завантажую…</div>';
+    api('/admin/report?p=' + encodeURIComponent(id)).then(function(r){ state.report = r; renderDetail(); });
+  }
+
+  function renderDetail(){
+    var r = state.report, p = r.proposal;
+    var byToken = {};
+    r.viewers.forEach(function(v){ byToken[v.token || ''] = v; });
+    var rows = r.recipients.map(function(x){ return { name: x.name, token: x.token, v: byToken[x.token] }; });
+    if (byToken['']) rows.push({ name: 'Без персонального лінка', token: '', v: byToken[''] });
+    r.viewers.forEach(function(v){ if (v.token && !r.recipients.some(function(x){ return x.token === v.token; })) rows.push({ name: 'Невідомий лінк (' + v.token + ')', token: v.token, v: v }); });
+
+    var table = '<table><thead><tr><th>Хто</th><th>Візити</th><th>Пристрої</th><th>Читав</th><th>Ціни</th><th>Кнопки</th><th>Останній</th><th></th></tr></thead><tbody>' +
+      rows.map(function(x){
+        var v = x.v;
+        var pricing = v && v.slides.filter(function(s){ return s.label === 'pricing'; }).reduce(function(a, s){ return a + s.ms; }, 0);
+        var clicks = v ? v.ctas.map(function(c){ return esc(c.label) + (c.n > 1 ? ' ×' + c.n : ''); }).join(', ') : '';
+        return '<tr><td><div class="who">' + esc(x.name) + '</div>' + (v ? '<div class="sm">перший ' + when(v.first_ts) + (v.countries ? ' · ' + esc(v.countries) : '') + '</div>' : '<div class="sm">не відкривав</div>') + '</td>' +
+          '<td class="num">' + (v ? v.sessions : '<span class="no">0</span>') + '</td>' +
+          '<td class="num">' + (v ? v.devices : '—') + '</td>' +
+          '<td class="num">' + (v ? secs(v.read_ms) : '—') + '</td>' +
+          '<td class="num">' + (pricing ? '<span class="strong">' + secs(pricing) + '</span>' : '<span class="no">—</span>') + '</td>' +
+          '<td>' + (clicks ? '<span class="yes">' + clicks + '</span>' : '<span class="no">—</span>') + '</td>' +
+          '<td class="num">' + (v ? ago(v.last_ts) : '—') + '</td>' +
+          '<td>' + (x.token ? '<button class="btn btn-ghost btn-sm" type="button" data-copy="' + esc(linkFor(p, x.token)) + '">Лінк</button>' : '') + '</td></tr>';
+      }).join('') + '</tbody></table>';
+
+    var people = rows.filter(function(x){ return x.v; });
+    var sel = '<select id="person"><option value="">усі разом</option>' + people.map(function(x){
+      return '<option value="' + esc(x.token) + '"' + (state.person === x.token ? ' selected' : '') + '>' + esc(x.name) + '</option>';
+    }).join('') + '</select>';
+
+    $('#detail').innerHTML =
+      '<div class="p-head"><div><h2 class="det-title">' + esc(p.label || p.id) + '</h2>' +
+        '<div class="det-meta">' + (p.url ? '<a href="' + esc(p.url) + '" target="_blank" rel="noopener">' + esc(p.url) + '</a> · ' : '') + 'id ' + esc(p.id) +
+        (p.crm_company_id ? ' · Twenty ✓' : '') + '</div></div>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+          '<button class="btn btn-ghost btn-sm" type="button" id="add-people">+ Людина</button>' +
+          '<button class="btn btn-ghost btn-sm" type="button" id="snip">Код для сторінки</button>' +
+          '<button class="btn btn-ghost btn-sm" type="button" id="arch">' + (p.archived ? 'Повернути з архіву' : 'В архів') + '</button>' +
+        '</div></div>' +
+      '<h3 style="font-size:16px;margin-top:6px">Хто що робив</h3>' +
+      '<p class="note">Один рядок = один персональний лінк. «Пристрої» більше 1 = лінк відкривали з різних пристроїв: телефон тієї ж людини або колега. «Ціни» = сумарний час на слайді з data-track="pricing".</p>' +
+      table +
+      '<div class="p-head" style="margin:22px 0 6px"><h3 style="font-size:16px">Час на слайдах</h3>' + (people.length ? sel : '') + '</div>' +
+      '<p class="note">Скільки секунд кожен слайд був на екрані. Кораловим виділено ціни. Слайд, який перечитують найдовше, і є головне заперечення: з нього починати фолоуап.</p>' +
+      '<div class="bars" id="bars"></div>';
+
+    $('#detail').querySelectorAll('[data-copy]').forEach(function(b){ b.addEventListener('click', function(){ copy(b.dataset.copy, 'Лінк скопійовано'); }); });
+    var ps = $('#person'); if (ps) ps.addEventListener('change', function(){ state.person = ps.value; renderBars(); });
+    $('#arch').addEventListener('click', function(){
+      api('/admin/archive', { method: 'POST', body: JSON.stringify({ id: p.id, archived: !p.archived }) }).then(function(){ toast(p.archived ? 'Повернуто' : 'В архіві'); state.current = null; load(); });
+    });
+    $('#snip').addEventListener('click', function(){ snippet(p.id).then(function(s){ copy(s, 'Код скопійовано'); }); });
+    $('#add-people').addEventListener('click', function(){ openDialog(p); });
+    renderBars();
+    if (window.__tips) window.__tips();
+  }
+
+  function renderBars(){
+    var r = state.report, agg = {};
+    r.viewers.forEach(function(v){
+      if (state.person && v.token !== state.person) return;
+      v.slides.forEach(function(s){
+        var k = s.slide;
+        agg[k] = agg[k] || { slide: s.slide, label: s.label, ms: 0 };
+        agg[k].ms += s.ms;
+      });
+    });
+    var list = Object.keys(agg).map(function(k){ return agg[k]; }).sort(function(a, b){ return a.slide - b.slide; });
+    var max = Math.max.apply(null, list.map(function(x){ return x.ms; }).concat([1]));
+    $('#bars').innerHTML = list.length ? list.map(function(x){
+      var name = x.label || ('слайд ' + (x.slide + 1));
+      return '<div class="bar' + (x.label === 'pricing' ? ' main' : '') + '"><span class="l" title="' + esc(name) + '">' + (x.slide + 1) + '. ' + esc(name === 'pricing' ? 'ціни' : name) + '</span>' +
+        '<span class="track"><span class="fill" style="width:' + Math.max(2, Math.round(x.ms / max * 100)) + '%"></span></span>' +
+        '<span class="v">' + secs(x.ms) + '</span></div>';
+    }).join('') : '<div class="empty">Ще немає часу на слайдах.</div>';
+  }
+
+  var trackJs = null;
+  function snippet(id){
+    var get = trackJs ? Promise.resolve(trackJs) : fetch('/t.js').then(function(r){ return r.text(); }).then(function(t){ trackJs = t; return t; });
+    return get.then(function(js){
+      return '<meta name="pt-endpoint" content="' + API + '">\n<meta name="pt-id" content="' + id + '">\n<script>\n' + js + '<\/script>\n';
+    });
+  }
+
+  // new proposal / add people
+  var dlg = $('#dlg'), form = $('#new-form');
+  function openDialog(p){
+    form.reset(); $('#new-err').textContent = '';
+    form.classList.remove('hidden'); $('#new-done').classList.add('hidden');
+    if (p) { form.label.value = p.label || ''; form.url.value = p.url || ''; form.id.value = p.id; form.crm.value = p.crm_company_id || ''; form.id.readOnly = true; }
+    else form.id.readOnly = false;
+    dlg.showModal();
+  }
+  $('#new-btn').addEventListener('click', function(){ openDialog(null); });
+  $('#dlg-cancel').addEventListener('click', function(){ dlg.close(); });
+  $('#dlg-close').addEventListener('click', function(){ dlg.close(); load(); });
+  form.label.addEventListener('input', function(){
+    if (form.id.readOnly || form.id.dataset.touched) return;
+    form.id.value = form.label.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48);
+  });
+  form.id.addEventListener('input', function(){ form.id.dataset.touched = '1'; });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var body = {
+      id: form.id.value.trim(), label: form.label.value.trim(), url: form.url.value.trim(),
+      crm_company_id: form.crm.value.trim() || null,
+      recipients: form.recipients.value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean),
+    };
+    api('/admin/proposals', { method: 'POST', body: JSON.stringify(body) }).then(function(res){
+      if (!res.ok) { $('#new-err').textContent = res.error || 'Не вийшло'; return; }
+      state.current = res.id;
+      form.classList.add('hidden'); $('#new-done').classList.remove('hidden');
+      $('#new-links').innerHTML = res.recipients.map(function(x){
+        var u = linkFor(body, x.token);
+        return '<div class="link-row"><div><div class="n">' + esc(x.name) + '</div><div class="u">' + esc(u) + '</div></div>' +
+          '<button class="btn btn-ghost btn-sm" type="button" data-copy="' + esc(u) + '">Копіювати</button></div>';
+      }).join('') || '<div class="empty">Без отримувачів: усі відкриття підуть як «без персонального лінка».</div>';
+      $('#new-links').querySelectorAll('[data-copy]').forEach(function(b){ b.addEventListener('click', function(){ copy(b.dataset.copy, 'Лінк скопійовано'); }); });
+      $('#copy-snippet').onclick = function(){ snippet(res.id).then(function(s){ copy(s, 'Код скопійовано'); }); };
+    });
+  });
+
+  load();
+  setInterval(function(){ if (!document.hidden && tok() && !dlg.open) load(); }, 60000);
+})();
+</script>
+<!-- info-tips js: _shared/info-tips.html, wrapped so the detail panel can re-run it after render -->
+<script id="info-tips-js">
+(function(){
+  function hostFor(el){
+    if(el.classList.contains('howto')) return (el.closest('.head')||document).querySelector('h1');
+    var n=el.previousElementSibling;
+    while(n){ if(/^H[1-3]$/.test(n.tagName)) return n; var h=n.querySelector&&n.querySelector('h2,h3'); if(h&&/p-head|sec-head/.test(n.className)) return h; n=n.previousElementSibling; }
+    var panel=el.closest('.panel,.mini,section'); return panel?panel.querySelector('h2,h3'):null;
+  }
+  function place(btn,pop){
+    pop.style.left='0'; var r=pop.getBoundingClientRect(), over=r.right-(window.innerWidth-12);
+    if(over>0){ pop.style.left=(-over)+'px'; pop.style.setProperty('--arrow',(over+6)+'px'); } else pop.style.setProperty('--arrow','6px');
+  }
+  function build(){
+    document.querySelectorAll('.foot,.howto,p.note').forEach(function(el){
+      if(el.dataset.tip) return; var host=hostFor(el); if(!host) return;
+      el.dataset.tip='1'; el.style.display='none';
+      var btn=document.createElement('button'); btn.type='button'; btn.className='info-btn'; btn.setAttribute('aria-label','Пояснення'); btn.textContent='i';
+      var pop=document.createElement('span'); pop.className='info-pop'; pop.setAttribute('role','tooltip'); btn.appendChild(pop);
+      var fill=function(){ pop.innerHTML=el.innerHTML; place(btn,pop); };
+      btn.addEventListener('mouseenter',fill); btn.addEventListener('focus',fill);
+      btn.addEventListener('click',function(e){ e.stopPropagation(); fill(); btn.classList.toggle('open'); });
+      host.appendChild(btn);
+    });
+  }
+  window.__tips = build;
+  document.addEventListener('click',function(){ document.querySelectorAll('.info-btn.open').forEach(function(b){b.classList.remove('open');}); });
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',build); else build();
+  window.addEventListener('load',build);
+})();
+</script>
+</body>
+</html>

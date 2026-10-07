@@ -1,0 +1,4 @@
+wrangler.jsonc
+.wrangler/
+public/t.js
+.dev.vars

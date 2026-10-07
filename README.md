@@ -47,6 +47,9 @@ Runs inside **Claude Code**. To set it up, connect:
 | `WebFetch` + Bash (`curl`, `grep`) | Grounding client copy/proof; extracting brand tokens if no design system exists yet | **Built in** — no setup | — |
 | **Netlify** (CLI via `npx netlify-cli`) | Deploying both proposals to a live URL | **Required** for the deploy step. Without it you still get the local HTML files. | `npx netlify-cli login` or `NETLIFY_AUTH_TOKEN` |
 | **Apify** (MCP server) | Fallback scraper for JS-heavy / curl-blocked client sites when extracting brand directly | Optional | Connect the Apify MCP server / set `APIFY_TOKEN` |
+| **Cloudflare Workers + D1** (`tracker/`) | Proposal tracking: opens, seconds per slide, forwards, button clicks | Optional | `npx wrangler login`, then the setup in `reference/tracking.md` |
+| **Telegram bot** | Real-time alerts from the tracker | Optional | `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` as Worker secrets |
+| **Twenty CRM** (REST) | Buying signal on the account when a recipient re-reads, forwards or reads pricing | Optional | `TWENTY_URL` var + `TWENTY_KEY` secret on the Worker |
 | Claude Preview (local server) | Previewing the deck/document before deploy | Optional | Built into Claude Code |
 
 No LLM API key is needed beyond Claude Code itself. A traffic/SEO source (SimilarWeb / Ahrefs)

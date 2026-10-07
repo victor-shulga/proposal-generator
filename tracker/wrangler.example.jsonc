@@ -1,0 +1,17 @@
+// Copy to wrangler.jsonc and put your own D1 database_id there (wrangler.jsonc is gitignored).
+{
+  "name": "proposal-track",
+  "main": "src/worker.js",
+  "assets": { "directory": "./public" },
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "d1_databases": [
+    { "binding": "DB", "database_name": "proposal-track", "database_id": "<your-d1-id>" }
+  ],
+  "vars": {
+    // Optional CRM signal. Leave empty to only get Telegram alerts.
+    "TWENTY_URL": "",
+    "SIGNAL_CODE": "F12"
+  }
+}

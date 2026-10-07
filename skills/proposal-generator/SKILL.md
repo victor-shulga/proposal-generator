@@ -101,6 +101,8 @@ FAQ/objections → How we start.**
   breakdown →") linking `[link-to-cost-breakdown-pdf]`, so the lead can open the detailed
   line-by-line costing in-browser. (PDF, not Excel — opens without download.)
 - **No ROI-projection slide** (correlates with −27% close). Use operational outcomes only.
+- **Tracking hooks:** the Pricing / Investment slide carries `data-track="pricing"`; every CTA and the
+  `.doc-btn` carry `data-track="<label>"`. Cheap to add even if the deal is never tracked (Step 6d).
 - Per [[feedback_white_background]] the white-BG rule is LinkedIn-only; dark brand sections
   are fine in proposals.
 
@@ -161,6 +163,21 @@ Confirm the deploy log's Production URL is `<client>-proposals.netlify.app` and 
 other client's site. If it is not, you just clobbered them — redeploy the victim's real
 source folder to its own siteId immediately.
 
+### 6d · Turn on tracking (send proposal; default on)
+
+Full guide: `reference/tracking.md`. Short version, after the deploy URL exists:
+
+```bash
+scripts/proposal-track.py add <client>-<deal> --url <live send-proposal URL> \
+  --label "<Client> · <deal>" --to "<Name (role)>" --to "<Name (role)>" [--crm <twenty-company-id>]
+scripts/proposal-track.py snippet <client>-<deal>   # paste: <meta> tags into <head>, <script> before </body>
+```
+
+Or do the same from the dashboard at the tracker Worker root (form → links + snippet). Redeploy, open the live page once with `?pt=off` to mute your own browser, and hand out one
+`?r=<token>` link per person. Alerts go to Telegram (first open, came back after 6h, new device =
+likely forwarded, 10s+ on pricing, any button). `scripts/proposal-track.py report <id>` before every
+follow-up: the slide they re-read is the objection to answer.
+
 ## Step 7 — Memory
 
 Record the proposal build under the client's project memory: file path, port, Netlify URL,
@@ -171,6 +188,7 @@ which variants, and the ICP-swap axis chosen.
 ## Reference files
 - `reference/deck-engine.md` — **the canonical deck engine**: single-file HTML, in-file `@media print`, headless-Chrome PDF, the verification gates, and the legacy engines not to start from
 - `scripts/verify-deck.sh` — the deterministic render check used in Step 6a
+- `reference/tracking.md` + `scripts/proposal-track.py` + `scripts/track.js` — who opened, re-read, forwarded, read pricing (Step 6d); the Worker lives in `tracker/` of the plugin repo
 - `reference/call-deck-framework.md` — Viktor's high-ticket proposal framework, slide-by-slide + principles
 - `reference/send-proposal-structure.md` — the self-contained send-document anatomy
 - `reference/critique-checklist.md` — the quote-vs-proposal critique used to roast existing proposals
